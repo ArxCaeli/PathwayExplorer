@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pathways", "Pathways\Pathways.csproj", "{C1A03A8D-41F9-416A-9224-43E4D12AEA48}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1A03A8D-41F9-416A-9224-43E4D12AEA48}.Debug|x86.ActiveCfg = Debug|x86
+		{C1A03A8D-41F9-416A-9224-43E4D12AEA48}.Debug|x86.Build.0 = Debug|x86
+		{C1A03A8D-41F9-416A-9224-43E4D12AEA48}.Release|x86.ActiveCfg = Release|x86
+		{C1A03A8D-41F9-416A-9224-43E4D12AEA48}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Pathways\Pathways.csproj
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+	EndGlobalSection
+EndGlobal

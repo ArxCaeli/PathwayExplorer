@@ -1,0 +1,30 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Pathways/Main.cs">
+    <Files>
+      <File FileName="Pathways/Main.cs" Line="50" Column="21" />
+      <File FileName="Pathways/KEGGREST_url_mgt.cs" Line="8" Column="45" />
+      <File FileName="Pathways/KEGG_Mgt.cs" Line="44" Column="71" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Pathways" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="Main.cs" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/home/arxcaeli/Pathways/Pathways/NCBISOAP_mgt.cs" line="29" />
+      <Breakpoint file="/home/arxcaeli/Pathways/Pathways/NCBISOAP_mgt.cs" line="51" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
