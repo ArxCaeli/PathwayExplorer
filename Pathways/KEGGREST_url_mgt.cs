@@ -31,6 +31,11 @@ namespace Pathways
 				ComposeRequest(Organizm,KEGGGenes);
 		}
 
+        public static string GetGenesInfoURL(string Organizm, List<string> KEGGGenes)
+        {
+            return "http://rest.kegg.jp/get/" + ComposeRequest(Organizm, KEGGGenes);            
+        }
+
 		private static string ComposeRequest(string Prefix, List<string> Entries)
 		{
 			string Request = "";
