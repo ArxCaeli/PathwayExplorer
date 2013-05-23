@@ -21,7 +21,17 @@ namespace Pathways
 
         public static string HTTPPost(string URL, string Params)
         {
-            WebRequest Req = WebRequest.Create(URL);
+            string Res = null;
+
+            HttpWebRequest Req = WebRequest.Create(URL) as HttpWebRequest;
+
+            Req.Accept = "*/*";
+            Req.KeepAlive = false;
+            Req.ProtocolVersion = HttpVersion.Version10;
+            Req.ServicePoint.ConnectionLimit = 1;
+            //Req.KeepAlive = false;
+            //Req.ProtocolVersion = 
+
             //string ProxyString = "";
             //Req.Proxy = new WebProxy(ProxyString, true);
 
@@ -35,15 +45,20 @@ namespace Pathways
 
             Str.Write(Bytes, 0, Bytes.Length);
             Str.Close();
-
-            WebResponse Resp = Req.GetResponse();
-
-            if (Resp == null)
-                return null;
-
-            System.IO.StreamReader Sr = new System.IO.StreamReader(Resp.GetResponseStream());
-
-            return Sr.ReadToEnd().Trim();
+            
+            using (WebResponse Resp = Req.GetResponse())
+            {
+                if (Resp != null)
+                {
+                    using (System.IO.StreamReader Sr = new System.IO.StreamReader(Resp.GetResponseStream()))
+                    {
+                        Res = Sr.ReadToEnd().Trim();
+                        Sr.Close();
+                    }
+                }
+                Resp.Close();
+            }
+            return Res;
         }
 	}
 }

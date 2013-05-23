@@ -93,6 +93,14 @@ namespace Pathways
             return Gene;
         }
 
+        public static string GetCutSequence(int SeqStart, int SeqEnd, int Strand, string OrganismAlias)
+        {
+            return 
+                GetCleanFasta(
+                    HTTP_Mgt.HttpGet(
+                        KEGGREST_url_mgt.GetCutSequenceURL(SeqStart, SeqEnd, Strand, OrganismAlias)));
+        }
+
 
 
         /// <summary>
@@ -102,36 +110,26 @@ namespace Pathways
         /// <param name="ECList"></param>
         /// <param name="Limit"></param>
         /// <returns></returns>
-		public static List<string> GetDNAByKEGGGeneIds (string Organizm, List<string> ECList, int Limit)
+		public static List<string> GetDNAByKEGGGeneIds (string Organizm, List<string> ECList)
 		{
-			return GetCleanFasta(
-				HTTP_Mgt.HttpGet(KEGGREST_url_mgt.GetSequencesURL(Organizm, ECList)), Limit);
+            return null;
+            //GetCleanFasta(
+            //     HTTP_Mgt.HttpGet(KEGGREST_url_mgt.GetSequencesURL(Organizm, ECList)));
 		}
                 
-		private static List<string> GetCleanFasta(string HTMLData, int Limit)
-		{
-			List<string> FastaResult = new List<string>();
-			while(HTMLData.Contains(">"))
+		private static string GetCleanFasta(string HTMLData)
+		{            
+            HTMLData = HTMLData.Remove(0, HTMLData.IndexOf("<PRE>") + 6);
+            HTMLData = HTMLData.Remove(HTMLData.IndexOf("</PRE>"), HTMLData.Length - HTMLData.IndexOf("</PRE>"));
+            HTMLData = HTMLData.Remove(0, HTMLData.IndexOf("\n") + 1); // remove description
+            HTMLData = HTMLData.Replace("\n", "");
+
+            while (HTMLData.Contains("<"))
 			{
-				if (HTMLData.IndexOf("<") < HTMLData.IndexOf(">"))
-					HTMLData = HTMLData.Remove(0, HTMLData.IndexOf(">") + 1);
-				else
-				{
-					FastaResult.Add(
-						TruncateFasta(HTMLData.Substring(0, HTMLData.IndexOf("<")), Limit));
-					HTMLData = HTMLData.Remove(0, HTMLData.IndexOf("<"));
-				}
+                HTMLData = HTMLData.Remove(HTMLData.IndexOf("<"), HTMLData.IndexOf(">") - HTMLData.IndexOf("<") + 1);
 			}
 
-			return FastaResult;
-		}
-
-		private static string TruncateFasta(string Fasta, int Limit)
-		{
-			string Result = Fasta.Substring(0, Fasta.IndexOf("\n") + 1);
-			Fasta = Fasta.Remove(0, Fasta.IndexOf("\n") + 1);
-			Result += Fasta.Substring(0, Math.Min(Limit, Fasta.Length));
-			return Result;
+			return HTMLData;
 		}
 	}
 }

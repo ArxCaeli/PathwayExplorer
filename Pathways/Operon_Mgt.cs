@@ -5,21 +5,28 @@ using System.Text;
 
 using System.IO;
 
+using System.Runtime.Serialization.Formatters.Binary;
+
 namespace Pathways
 {
-    public struct Operon
+    [Serializable()]
+    public class Operon
     {
-        public string No;
-        public string Name;
-        public string GeneName;
-        public string LocusName;
-        public string GI; // gene id? | protein id?
-        public int Strand;
-        public int PosLeft;
-        public int PosRight;
-        public string GeneProduct;
-        public int PositionWithinOperon;
-        public string Info;
+        public string No { get; set; }
+        public string Name { get; set; }
+        public string GeneName { get; set; }
+        public string LocusName { get; set; }
+        public string GI { get; set; } // gene id? | protein id?
+        public int Strand { get; set; }
+        public int PosLeft { get; set; }
+        public int PosRight { get; set; }
+        public string GeneProduct { get; set; }
+        public int PositionWithinOperon { get; set; }
+        public string Info { get; set; }
+
+        public Operon()
+        {
+        }
     }
 
     public static class Operon_Mgt
@@ -66,6 +73,28 @@ namespace Pathways
             //string Response = string.Join("", FileContent);
 
             return ParseOperon(Response);            
+        }
+
+        public static void SerializeOperons(string FileName, List<Operon> Operons)
+        {
+            using (Stream stream = File.Open(FileName, FileMode.Create))
+            {
+                BinaryFormatter bin = new BinaryFormatter();
+                bin.Serialize(stream, Operons);
+            }
+        }
+
+        public static List<Operon> DeserializeOperons(string FileName)
+        {
+            var Operons = new List<Operon>();
+            using (Stream stream = File.Open(FileName, FileMode.Open))
+            {
+                BinaryFormatter bin = new BinaryFormatter();
+
+                Operons = (List<Operon>)bin.Deserialize(stream);                
+            }
+
+            return Operons;
         }
     }
 }
