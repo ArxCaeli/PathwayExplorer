@@ -96,5 +96,22 @@ namespace Pathways
 
             return Operons;
         }
+
+        public static List<Operon> GetOperons(List<GeneInfo> GeneInfoList)
+        {
+            List<Operon> Operons = new List<Operon>();
+            foreach (GeneInfo G in GeneInfoList)
+            {
+                Console.WriteLine("Getting operon info for: " + G.GeneName);
+                                
+                Operons.Add(Operon_Mgt.FindOperon(G.OrganizmName, G.OrganizmAlias, G.GeneName));//"Escherichia coli K-12 MG1655", "eco", "metL"));
+            }
+
+            Operon_Mgt.SerializeOperons(@"C:\deleteme\Operons.txt", Operons);
+            //Operons = Operon_Mgt.DeserializeOperons(@"C:\deleteme\Operons.txt");
+
+            return Operons;
+        }
+
     }
 }

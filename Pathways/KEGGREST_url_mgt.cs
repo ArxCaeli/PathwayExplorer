@@ -36,11 +36,18 @@ namespace Pathways
             return "http://rest.kegg.jp/get/" + ComposeRequest(Organizm, KEGGGenes);            
         }
 
-        public static string GetCutSequenceURL(int SeqStart, int SeqEnd, int Strand, string OrganismAlias)
+        public static string GetGenesInfoURL(List<string> Organisms, string KEGGGene)
+        {
+            return "http://rest.kegg.jp/get/" + ComposeRequest(Organisms, KEGGGene);
+        }
+
+
+        public static string GetCutSequenceURL(int SeqStart, int SeqEnd, int Strand, int Chr, string OrganismAlias)
         {
             //http://www.genome.jp/dbget-bin/cut_sequence_genes.pl?FROM=4127658&TO=4130290&VECTOR=1&ORG=eco
             return "http://www.genome.jp/dbget-bin/cut_sequence_genes.pl?FROM=" + SeqStart.ToString() + 
-                "&TO=" + SeqEnd.ToString() + "&VECTOR=" + Strand.ToString() + "&ORG=" + OrganismAlias;
+                "&TO=" + SeqEnd.ToString() + "&VECTOR=" + Strand.ToString() + "&ORG=" + OrganismAlias +
+                ((Chr == 0) ? "" : "&CHR=" + Chr.ToString());
         }
 
 		private static string ComposeRequest(string Prefix, List<string> Entries)

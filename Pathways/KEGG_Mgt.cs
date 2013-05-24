@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 using System.Text.RegularExpressions;
 
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+
 namespace Pathways
 {
     public struct GeneInfo
@@ -10,6 +13,9 @@ namespace Pathways
         public string OrganizmAlias;
         public string OrganizmName;
         public string GeneName;
+        public int Chr; // plasmid or chr
+        public int Start;
+        public int Stop;
     }
 
 	public static class KEGG_Mgt
@@ -64,6 +70,15 @@ namespace Pathways
             return GetGeneInfoFromREST(AllInfo);
         }
 
+        public static List<GeneInfo> GetGeneInfoByKEGGGenes(List<string> Organisms, string GeneName)
+        {
+            string AllInfo = HTTP_Mgt.HttpGet(KEGGREST_url_mgt.GetGenesInfoURL(Organisms, GeneName));
+
+            Console.WriteLine(AllInfo);
+
+            return GetGeneInfoFromREST(AllInfo);
+        }
+
         private static List<GeneInfo> GetGeneInfoFromREST(string RESTReply)
         {
             List<GeneInfo> GeneInfoList = new List<GeneInfo>();
@@ -90,18 +105,61 @@ namespace Pathways
             Gene.OrganizmAlias = M.Groups[2].Captures[0].Value;
             Gene.OrganizmName = M.Groups[3].Captures[0].Value;
 
+            // get position: to get chr (plasmid / chromosome)
+            R = new Regex(@"\nPOSITION\s+((\d:)?(\d+)..(\d+))\n", RegexOptions.Multiline);
+            M = R.Match(GeneInfoStr);
+            if (M.Success)
+            {
+                if (M.Groups[2].Captures.Count != 0)
+                    Gene.Chr = int.Parse(M.Groups[2].Captures[0].Value.Replace(":", ""));
+                else
+                    Gene.Chr = 0;
+
+                Gene.Start = int.Parse(M.Groups[3].Captures[0].Value);
+                Gene.Stop = int.Parse(M.Groups[4].Captures[0].Value);
+            }
             return Gene;
         }
 
-        public static string GetCutSequence(int SeqStart, int SeqEnd, int Strand, string OrganismAlias)
+        public static string GetCutSequence(int SeqStart, int SeqEnd, int Strand, int Chr, string OrganismAlias)
         {
             return 
                 GetCleanFasta(
                     HTTP_Mgt.HttpGet(
-                        KEGGREST_url_mgt.GetCutSequenceURL(SeqStart, SeqEnd, Strand, OrganismAlias)));
+                        KEGGREST_url_mgt.GetCutSequenceURL(SeqStart, SeqEnd, Strand, Chr, OrganismAlias)));
         }
 
+        public static List<string> GetFastaDNASequencesByOperons(List<Operon> Operons, List<GeneInfo> GeneInfoList)
+        {
+            List<string> DNASequences = new List<string>();
 
+            for (int I = 0; I < GeneInfoList.Count; I++)
+            {
+                if (Operons[I].Strand == 1)
+                    DNASequences.Add(
+                        KEGG_Mgt.AddFastaDescription(
+                            KEGG_Mgt.GetCutSequence(
+                                Operons[I].PosLeft - 200, Operons[I].PosLeft, 1, GeneInfoList[I].Chr, GeneInfoList[I].OrganizmAlias),
+                            GeneInfoList[I]));
+                else
+                    DNASequences.Add(
+                        KEGG_Mgt.AddFastaDescription(
+                            KEGG_Mgt.GetCutSequence(
+                                Operons[I].PosRight, Operons[I].PosRight + 200, 2, GeneInfoList[I].Chr, GeneInfoList[I].OrganizmAlias),
+                        GeneInfoList[I]));
+            }
+
+            SerializeFasta(@"C:\deleteme\Fasta.txt", DNASequences);
+
+            //DNASequences = DeserializeFasta(@"C:\deleteme\Fasta.txt");
+
+            return DNASequences;
+        }
+
+        public static string AddFastaDescription(string Fasta, GeneInfo Info)
+        {
+            return ">" + Info.OrganizmAlias + "|" + Info.GeneName + "\n" + Fasta;
+        }
 
         /// <summary>
         /// Gets dna from gene start (operon not used)
@@ -131,6 +189,28 @@ namespace Pathways
 
 			return HTMLData;
 		}
+
+        public static void SerializeFasta(string FileName, List<string> Fasta)
+        {
+            using (Stream stream = File.Open(FileName, FileMode.Create))
+            {
+                BinaryFormatter bin = new BinaryFormatter();
+                bin.Serialize(stream, Fasta);
+            }
+        }
+
+        public static List<string> DeserializeFasta(string FileName)
+        {
+            var Fasta = new List<string>();
+            using (Stream stream = File.Open(FileName, FileMode.Open))
+            {
+                BinaryFormatter bin = new BinaryFormatter();
+
+                Fasta = (List<string>)bin.Deserialize(stream);
+            }
+
+            return Fasta;
+        }
 	}
 }
 
