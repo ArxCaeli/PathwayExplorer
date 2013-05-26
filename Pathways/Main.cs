@@ -19,7 +19,7 @@ namespace Pathways
             // http://exploringlifedata.blogspot.co.uk/2012/11/have-rest-with-kegg.html
             GetGeneOrtologSequences();
 
-		}
+		} 
 
         public static void GetPathwaySequences()
         {
@@ -61,6 +61,13 @@ namespace Pathways
 
         public static void GetGeneOrtologSequences()
         {
+			// common ec avaliable
+			//ECList.Add("2.7.2.4"); K00928
+			//ECList.Add("2.1.1.14"); K00549
+			//ECList.Add("1.1.1.3"); K00003
+ 	 
+			//lysC = K00928 (ortholog list)
+			//http://rest.kegg.jp/link/genes/K00928
             List<string> Species = new List<string>();
             Species.Add("eco");
             Species.Add("ppf"); // pseudomonada putida f1
