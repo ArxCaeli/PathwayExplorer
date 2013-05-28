@@ -41,6 +41,11 @@ namespace Pathways
             return "http://rest.kegg.jp/get/" + ComposeRequest(Organisms, KEGGGene);
         }
 
+        public static string GetGenesInfoURL(List<string> Organisms, List<string> KEGGGenes)
+        {
+            return "http://rest.kegg.jp/get/" + ComposeRequest(Organisms, KEGGGenes);
+        }
+
 
         public static string GetCutSequenceURL(int SeqStart, int SeqEnd, int Strand, int Chr, string OrganismAlias)
         {
@@ -48,6 +53,12 @@ namespace Pathways
             return "http://www.genome.jp/dbget-bin/cut_sequence_genes.pl?FROM=" + SeqStart.ToString() + 
                 "&TO=" + SeqEnd.ToString() + "&VECTOR=" + Strand.ToString() + "&ORG=" + OrganismAlias +
                 ((Chr == 0) ? "" : "&CHR=" + Chr.ToString());
+        }
+
+        public static string GetOrthologListURL(string OrthologNo)
+        {
+            //http://rest.kegg.jp/link/genes/K00928
+            return "http://rest.kegg.jp/link/genes/" + OrthologNo;
         }
 
 		private static string ComposeRequest(string Prefix, List<string> Entries)
@@ -73,6 +84,18 @@ namespace Pathways
 			}
 			return Request;
 		}
+
+        private static string ComposeRequest(List<string> Prefixes, List<string> Entries)
+        {
+            string Request = "";
+            for (int I = 0; I < Prefixes.Count; I++) 
+            {
+                if (Request != "")
+                    Request += "+";
+                Request += Prefixes[I] + ":" + Entries[I];
+            }
+            return Request;
+        }
 	}
 }
 

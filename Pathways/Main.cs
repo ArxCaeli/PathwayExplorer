@@ -68,13 +68,18 @@ namespace Pathways
  	 
 			//lysC = K00928 (ortholog list)
 			//http://rest.kegg.jp/link/genes/K00928
+
             List<string> Species = new List<string>();
+            
             Species.Add("eco");
             Species.Add("ppf"); // pseudomonada putida f1
             Species.Add("noc"); // Nitrosococcus oceani
             Species.Add("vco"); // Vibrio cholerae O395
 
-            List<GeneInfo> GeneInfoList = KEGG_Mgt.GetGeneInfoByKEGGGenes(Species, "metB");
+            string OrthologList = KEGG_Mgt.GetOrthologList("K00928");
+            List<string> GeneNames = KEGG_Mgt.GetGeneNamesFromOrthologList(Species, OrthologList);
+                        
+            List<GeneInfo> GeneInfoList = KEGG_Mgt.GetGeneInfoByKEGGGenes(Species, GeneNames);
             List<Operon> Operons = Operon_Mgt.GetOperons(GeneInfoList);
             List<string> DNASequences = KEGG_Mgt.GetFastaDNASequencesByOperons(Operons, GeneInfoList);
 

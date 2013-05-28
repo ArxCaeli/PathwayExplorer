@@ -75,10 +75,18 @@ namespace Pathways
             string AllInfo = HTTP_Mgt.HttpGet(KEGGREST_url_mgt.GetGenesInfoURL(Organisms, GeneName));
 
             Console.WriteLine(AllInfo);
+            
+            return GetGeneInfoFromREST(AllInfo);
+        }
+
+        public static List<GeneInfo> GetGeneInfoByKEGGGenes(List<string> Organisms, List<string> GeneNames)
+        {
+            string AllInfo = HTTP_Mgt.HttpGet(KEGGREST_url_mgt.GetGenesInfoURL(Organisms, GeneNames));
 
             return GetGeneInfoFromREST(AllInfo);
         }
 
+        
         private static List<GeneInfo> GetGeneInfoFromREST(string RESTReply)
         {
             List<GeneInfo> GeneInfoList = new List<GeneInfo>();
@@ -95,7 +103,8 @@ namespace Pathways
         {
             GeneInfo Gene = new GeneInfo();
 
-            Regex R = new Regex(@"\nNAME\s+(.+)\n", RegexOptions.Multiline);
+            //Regex R = new Regex(@"\nNAME\s+(.+)\n", RegexOptions.Multiline);
+            Regex R = new Regex(@"ENTRY\s+(\w+)\s+", RegexOptions.Multiline);
             Match M = R.Match(GeneInfoStr);
             Gene.GeneName = M.Groups[1].Captures[0].Value;
 
@@ -159,6 +168,27 @@ namespace Pathways
         public static string AddFastaDescription(string Fasta, GeneInfo Info)
         {
             return ">" + Info.OrganizmAlias + "|" + Info.GeneName + "\n" + Fasta;
+        }
+
+        public static string GetOrthologList(string OrthologNo)
+        {
+            return HTTP_Mgt.HttpGet(KEGGREST_url_mgt.GetOrthologListURL(OrthologNo));
+        }
+
+        public static List<string> GetGeneNamesFromOrthologList(List<string> Species, string OrthologList)
+        {
+            List<string> Orthologs = new List<string>();
+
+            foreach (string Org in Species)
+            {
+                if (!OrthologList.Contains(Org))
+                    throw new Exception("No organism in list.");
+                string GeneName = OrthologList.Remove(0, OrthologList.IndexOf(Org));
+                GeneName = GeneName.Substring(GeneName.IndexOf(":") + 1, GeneName.IndexOf("\n") - GeneName.IndexOf(":") - 1);
+                Orthologs.Add(GeneName);
+            }
+
+            return Orthologs;
         }
 
         /// <summary>
