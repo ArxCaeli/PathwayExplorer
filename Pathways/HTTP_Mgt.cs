@@ -29,11 +29,6 @@ namespace Pathways
             Req.KeepAlive = false;
             Req.ProtocolVersion = HttpVersion.Version10;
             Req.ServicePoint.ConnectionLimit = 1;
-            //Req.KeepAlive = false;
-            //Req.ProtocolVersion = 
-
-            //string ProxyString = "";
-            //Req.Proxy = new WebProxy(ProxyString, true);
 
             Req.ContentType = @"application/x-www-form-urlencoded";
             Req.Method = "POST";

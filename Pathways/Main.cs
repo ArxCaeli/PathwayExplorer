@@ -14,9 +14,6 @@ namespace Pathways
 		public static void Main (string[] args)
 		{
             //GetPathwaySequences();
-
-            //to do: find orthologs http://www.kegg.jp/ssdb-bin/ssdb_best?org_gene=eco:b0002
-            // http://exploringlifedata.blogspot.co.uk/2012/11/have-rest-with-kegg.html
             GetGeneOrtologSequences();
 
 		} 
@@ -60,12 +57,7 @@ namespace Pathways
         }
 
         public static void GetGeneOrtologSequences()
-        {
-			// common ec avaliable
-			//ECList.Add("2.7.2.4"); K00928
-			//ECList.Add("2.1.1.14"); K00549
-			//ECList.Add("1.1.1.3"); K00003
- 	 
+        {	 
 			//lysC = K00928 (ortholog list)
 			//http://rest.kegg.jp/link/genes/K00928
 
@@ -95,22 +87,22 @@ namespace Pathways
         }
 
 
-		static List<string> SpeciesGenes(List<string> Species, string Enzyme)
-		{
-			List<string> FastaSeq = new List<string>();
+        //static List<string> SpeciesGenes(List<string> Species, string Enzyme)
+        //{
+        //    List<string> FastaSeq = new List<string>();
 
-			List<string> Enz = new List<string>();
-			Enz.Add(Enzyme);
-			foreach(string Org in Species)
-			{
-				List<string> KEGGGenes = KEGG_Mgt.GetKEGGGenesIDs(Org, Enz);
-				List<string> SpecFasta = KEGG_Mgt.GetDNAByKEGGGeneIds(Org, KEGGGenes); 
-				foreach(string S in SpecFasta)
-					FastaSeq.Add(S);
-			}
+        //    List<string> Enz = new List<string>();
+        //    Enz.Add(Enzyme);
+        //    foreach(string Org in Species)
+        //    {
+        //        List<string> KEGGGenes = KEGG_Mgt.GetKEGGGenesIDs(Org, Enz);
+        //        List<string> SpecFasta = KEGG_Mgt.GetDNAByKEGGGeneIds(Org, KEGGGenes); 
+        //        foreach(string S in SpecFasta)
+        //            FastaSeq.Add(S);
+        //    }
 
-			return FastaSeq;
-		}      
+        //    return FastaSeq;
+        //}      
 
 	}
 }

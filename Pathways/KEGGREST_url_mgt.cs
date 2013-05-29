@@ -17,7 +17,6 @@ namespace Pathways
 		{
 			// http://rest.kegg.jp/conv/ncbi-gi/hsa:10458+ece:Z5100
 
-			//return @"http://rest.kegg.jp/conv/ncbi-gi/" + 
 			return @"http://rest.kegg.jp/conv/ncbi-geneid/" + 
 				ComposeRequest(Organizm,KEGGGenes);
 		}
