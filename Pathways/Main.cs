@@ -75,6 +75,11 @@ namespace Pathways
             Species.Add("ppf"); // pseudomonada putida f1
             Species.Add("noc"); // Nitrosococcus oceani
             Species.Add("vco"); // Vibrio cholerae O395
+            Species.Add("ype"); // Yersinia pestis CO92
+            Species.Add("asu"); // Actinobacillus succinogenes
+            Species.Add("son"); // Shewanella oneidensis
+            Species.Add("acd"); // Acinetobacter oleivorans
+            Species.Add("rma"); // Candidatus Ruthia magnifica
 
             string OrthologList = KEGG_Mgt.GetOrthologList("K00928");
             List<string> GeneNames = KEGG_Mgt.GetGeneNamesFromOrthologList(Species, OrthologList);
